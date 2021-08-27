@@ -21,11 +21,6 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<WebEncoderOptions>(options => 
-            {
-                options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All);
-            });
-
             //add MiniProfiler services
             services.AddNopMiniProfiler();
 
