@@ -357,9 +357,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     .OrderBy(language => language.DisplayOrder)
                     .Select(language => new CultureInfo(language.LanguageCulture)).ToList();
                 options.SupportedCultures = cultures;
+                options.SupportedUICultures = cultures;
                 options.DefaultRequestCulture = new RequestCulture(cultures.FirstOrDefault());
 
-                options.AddInitialRequestCultureProvider(new NopRequestCultureProvider(options));
+                options.AddInitialRequestCultureProvider(new NopRequestCultureProvider());
             });
         }
 

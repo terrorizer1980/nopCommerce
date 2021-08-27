@@ -1,9 +1,12 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
+using Nop.Services.Localization;
+using Nop.Services.Stores;
 
 namespace Nop.Web.Framework.Globalization
 {
@@ -12,18 +15,21 @@ namespace Nop.Web.Framework.Globalization
     /// </summary>
     public class NopRequestCultureProvider : RequestCultureProvider
     {
-        public NopRequestCultureProvider(RequestLocalizationOptions options)
-        {
-            Options = options;
-        }
-
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
         {
-            //set working language culture
-            var culture = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).LanguageCulture;
+            var localizationSettings = httpContext.RequestServices.GetService<LocalizationSettings>();
 
-            return new ProviderCultureResult(culture, culture);
+            if(!localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                return null;
+
+            //localized URLs are enabled, so try to get language from the requested page URL
+            var (isLocalized, language) = await httpContext.Request.Path.Value.IsLocalizedUrlAsync(httpContext.Request.PathBase, true);
+
+            if(!isLocalized)
+                return null;
+
+            return new ProviderCultureResult(language.LanguageCulture);
         }
     }
 }
