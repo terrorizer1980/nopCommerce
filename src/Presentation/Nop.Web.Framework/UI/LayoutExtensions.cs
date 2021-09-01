@@ -18,9 +18,10 @@ namespace Nop.Web.Framework.UI
         /// <param name="part">Title part</param>
         public static void AddTitleParts(this IHtmlHelper html, string part)
         {
-            var pageHeadBuilder  = EngineContext.Current.Resolve<IPageHeadBuilder>();
+            var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AddTitleParts(part);
         }
+
         /// <summary>
         /// Append title element to the <![CDATA[<head>]]>
         /// </summary>
@@ -28,9 +29,10 @@ namespace Nop.Web.Framework.UI
         /// <param name="part">Title part</param>
         public static void AppendTitleParts(this IHtmlHelper html, string part)
         {
-            var pageHeadBuilder  = EngineContext.Current.Resolve<IPageHeadBuilder>();
+            var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AppendTitleParts(part);
         }
+
         /// <summary>
         /// Generate all title parts
         /// </summary>
@@ -45,7 +47,6 @@ namespace Nop.Web.Framework.UI
             return new HtmlString(html.Encode(pageHeadBuilder.GenerateTitle(addDefaultTitle)));
         }
 
-
         /// <summary>
         /// Add meta description element to the <![CDATA[<head>]]>
         /// </summary>
@@ -56,6 +57,7 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AddMetaDescriptionParts(part);
         }
+
         /// <summary>
         /// Append meta description element to the <![CDATA[<head>]]>
         /// </summary>
@@ -66,6 +68,7 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AppendMetaDescriptionParts(part);
         }
+
         /// <summary>
         /// Generate all description parts
         /// </summary>
@@ -79,7 +82,6 @@ namespace Nop.Web.Framework.UI
             return new HtmlString(html.Encode(pageHeadBuilder.GenerateMetaDescription()));
         }
 
-
         /// <summary>
         /// Add meta keyword element to the <![CDATA[<head>]]>
         /// </summary>
@@ -90,6 +92,7 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AddMetaKeywordParts(part);
         }
+
         /// <summary>
         /// Append meta keyword element to the <![CDATA[<head>]]>
         /// </summary>
@@ -100,6 +103,7 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AppendMetaKeywordParts(part);
         }
+
         /// <summary>
         /// Generate all keyword parts
         /// </summary>
@@ -113,35 +117,38 @@ namespace Nop.Web.Framework.UI
             return new HtmlString(html.Encode(pageHeadBuilder.GenerateMetaKeywords()));
         }
 
+        /// <summary>
+        /// Add script element
+        /// </summary>
+        /// <param name="html">HTML helper</param>
+        /// <param name="src">Script path (minified version)</param>
+        /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
+        /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
+        /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
+        /// <param name="version">The file version</param>
+        public static void AddScriptParts(this IHtmlHelper html, string src, string debugSrc = "",
+            bool excludeFromBundle = false, bool isAsync = false, string version = null)
+        {
+            AddScriptParts(html, ResourceLocation.Head, src, debugSrc, excludeFromBundle, isAsync, version);
+        }
 
         /// <summary>
         /// Add script element
         /// </summary>
         /// <param name="html">HTML helper</param>
-        /// <param name="src">Script path (minified version)</param>
-        /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
-        /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
-        /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
-        public static void AddScriptParts(this IHtmlHelper html, string src, string debugSrc = "",
-            bool excludeFromBundle = false, bool isAsync = false)
-        {
-            AddScriptParts(html, ResourceLocation.Head, src, debugSrc, excludeFromBundle, isAsync);
-        }
-        /// <summary>
-        /// Add script element
-        /// </summary>
-        /// <param name="html">HTML helper</param>
         /// <param name="location">A location of the script element</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
+        /// <param name="version">The file version</param>
         public static void AddScriptParts(this IHtmlHelper html, ResourceLocation location,
-            string src, string debugSrc = "", bool excludeFromBundle = false, bool isAsync = false)
+            string src, string debugSrc = "", bool excludeFromBundle = false, bool isAsync = false, string version = null)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AddScriptParts(location, src, debugSrc, excludeFromBundle, isAsync);
+            pageHeadBuilder.AddScriptParts(location, src, debugSrc, excludeFromBundle, isAsync, version);
         }
+
         /// <summary>
         /// Append script element
         /// </summary>
@@ -150,11 +157,13 @@ namespace Nop.Web.Framework.UI
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
+        /// <param name="version">The file version</param>
         public static void AppendScriptParts(this IHtmlHelper html, string src, string debugSrc = "",
-            bool excludeFromBundle = false, bool isAsync = false)
+            bool excludeFromBundle = false, bool isAsync = false, string version = null)
         {
-            AppendScriptParts(html, ResourceLocation.Head, src, debugSrc, excludeFromBundle, isAsync);
+            AppendScriptParts(html, ResourceLocation.Head, src, debugSrc, excludeFromBundle, isAsync, version);
         }
+
         /// <summary>
         /// Append script element
         /// </summary>
@@ -164,12 +173,14 @@ namespace Nop.Web.Framework.UI
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
+        /// <param name="version">The file version</param>
         public static void AppendScriptParts(this IHtmlHelper html, ResourceLocation location,
-            string src, string debugSrc = "", bool excludeFromBundle = false, bool isAsync = false)
+            string src, string debugSrc = "", bool excludeFromBundle = false, bool isAsync = false, string version = null)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AppendScriptParts(location, src, debugSrc, excludeFromBundle, isAsync);
+            pageHeadBuilder.AppendScriptParts(location, src, debugSrc, excludeFromBundle, isAsync, version);
         }
+
         /// <summary>
         /// Generate all script parts
         /// </summary>
@@ -183,10 +194,6 @@ namespace Nop.Web.Framework.UI
             return new HtmlString(pageHeadBuilder.GenerateScripts(location, bundleFiles));
         }
 
-
-
-
-
         /// <summary>
         /// Add inline script element
         /// </summary>
@@ -198,6 +205,7 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AddInlineScriptParts(location, script);
         }
+
         /// <summary>
         /// Append inline script element
         /// </summary>
@@ -209,6 +217,7 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AppendInlineScriptParts(location, script);
         }
+
         /// <summary>
         /// Generate all inline script parts
         /// </summary>
@@ -228,10 +237,12 @@ namespace Nop.Web.Framework.UI
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
-        public static void AddCssFileParts(this IHtmlHelper html, string src, string debugSrc = "", bool excludeFromBundle = false)
+        /// <param name="version">The file version</param>
+        public static void AddCssFileParts(this IHtmlHelper html, string src, string debugSrc = "", bool excludeFromBundle = false, string version = null)
         {
-            AddCssFileParts(html, ResourceLocation.Head, src, debugSrc, excludeFromBundle);
+            AddCssFileParts(html, ResourceLocation.Head, src, debugSrc, excludeFromBundle, version);
         }
+
         /// <summary>
         /// Add CSS element
         /// </summary>
@@ -240,12 +251,14 @@ namespace Nop.Web.Framework.UI
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
-        public static void AddCssFileParts(this IHtmlHelper html, ResourceLocation location, 
-            string src, string debugSrc = "", bool excludeFromBundle = false)
+        /// <param name="version">The file version</param>
+        public static void AddCssFileParts(this IHtmlHelper html, ResourceLocation location,
+            string src, string debugSrc = "", bool excludeFromBundle = false, string version = null)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AddCssFileParts(location, src, debugSrc, excludeFromBundle);
+            pageHeadBuilder.AddCssFileParts(location, src, debugSrc, excludeFromBundle, version);
         }
+
         /// <summary>
         /// Append CSS element
         /// </summary>
@@ -253,10 +266,12 @@ namespace Nop.Web.Framework.UI
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
-        public static void AppendCssFileParts(this IHtmlHelper html, string src, string debugSrc = "", bool excludeFromBundle = false)
+        /// <param name="version">The file version</param>
+        public static void AppendCssFileParts(this IHtmlHelper html, string src, string debugSrc = "", bool excludeFromBundle = false, string version = null)
         {
-            AppendCssFileParts(html, ResourceLocation.Head, src, debugSrc, excludeFromBundle);
+            AppendCssFileParts(html, ResourceLocation.Head, src, debugSrc, excludeFromBundle, version);
         }
+
         /// <summary>
         /// Append CSS element
         /// </summary>
@@ -265,12 +280,14 @@ namespace Nop.Web.Framework.UI
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
-        public static void AppendCssFileParts(this IHtmlHelper html, ResourceLocation location, 
-            string src, string debugSrc = "", bool excludeFromBundle = false)
+        /// <param name="version">The file version</param>
+        public static void AppendCssFileParts(this IHtmlHelper html, ResourceLocation location,
+            string src, string debugSrc = "", bool excludeFromBundle = false, string version = null)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AppendCssFileParts(location, src, debugSrc, excludeFromBundle);
+            pageHeadBuilder.AppendCssFileParts(location, src, debugSrc, excludeFromBundle, version);
         }
+
         /// <summary>
         /// Generate all CSS parts
         /// </summary>
@@ -304,6 +321,7 @@ namespace Nop.Web.Framework.UI
 
             pageHeadBuilder.AddCanonicalUrlParts(part);
         }
+
         /// <summary>
         /// Append canonical URL element to the <![CDATA[<head>]]>
         /// </summary>
@@ -314,6 +332,7 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AppendCanonicalUrlParts(part);
         }
+
         /// <summary>
         /// Generate all canonical URL parts
         /// </summary>
@@ -327,7 +346,6 @@ namespace Nop.Web.Framework.UI
             return new HtmlString(pageHeadBuilder.GenerateCanonicalUrls());
         }
 
-
         /// <summary>
         /// Add any custom element to the <![CDATA[<head>]]> element
         /// </summary>
@@ -338,6 +356,7 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AddHeadCustomParts(part);
         }
+
         /// <summary>
         /// Append any custom element to the <![CDATA[<head>]]> element
         /// </summary>
@@ -348,6 +367,7 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AppendHeadCustomParts(part);
         }
+
         /// <summary>
         /// Generate all custom elements
         /// </summary>
@@ -359,7 +379,6 @@ namespace Nop.Web.Framework.UI
             return new HtmlString(pageHeadBuilder.GenerateHeadCustom());
         }
 
-
         /// <summary>
         /// Add CSS class to the <![CDATA[<head>]]> element
         /// </summary>
@@ -370,6 +389,7 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AddPageCssClassParts(part);
         }
+
         /// <summary>
         /// Append CSS class to the <![CDATA[<head>]]> element
         /// </summary>
@@ -380,6 +400,7 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AppendPageCssClassParts(part);
         }
+
         /// <summary>
         /// Generate all title parts
         /// </summary>
@@ -400,7 +421,6 @@ namespace Nop.Web.Framework.UI
             return new HtmlString(result);
         }
 
-
         /// <summary>
         /// Specify system name of admin menu item that should be selected (expanded)
         /// </summary>
@@ -411,6 +431,7 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.SetActiveMenuItemSystemName(systemName);
         }
+
         /// <summary>
         /// Get system name of admin menu item that should be selected (expanded)
         /// </summary>

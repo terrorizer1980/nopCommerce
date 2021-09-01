@@ -268,7 +268,8 @@ namespace Nop.Web.Framework.UI
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
-        public virtual void AddScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync)
+        /// <param name="version">The file version</param>
+        public virtual void AddScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync, string version = null)
         {
             if (!_scriptParts.ContainsKey(location))
                 _scriptParts.Add(location, new List<ScriptReferenceMeta>());
@@ -284,7 +285,8 @@ namespace Nop.Web.Framework.UI
                 ExcludeFromBundle = excludeFromBundle,
                 IsAsync = isAsync,
                 Src = src,
-                DebugSrc = debugSrc
+                DebugSrc = debugSrc,
+                Version = version
             });
         }
         /// <summary>
@@ -295,7 +297,8 @@ namespace Nop.Web.Framework.UI
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
-        public virtual void AppendScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync)
+        /// <param name="version">The file version</param>
+        public virtual void AppendScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync, string version = null)
         {
             if (!_scriptParts.ContainsKey(location))
                 _scriptParts.Add(location, new List<ScriptReferenceMeta>());
@@ -311,7 +314,8 @@ namespace Nop.Web.Framework.UI
                 ExcludeFromBundle = excludeFromBundle,
                 IsAsync = isAsync,
                 Src = src,
-                DebugSrc = debugSrc
+                DebugSrc = debugSrc,
+                Version = version
             });
         }
         /// <summary>
@@ -374,7 +378,7 @@ namespace Nop.Web.Framework.UI
                     }
 
                     //output file
-                    var outputFileName = GetBundleFileName(partsToBundle.Select(x => debugModel ? x.DebugSrc : x.Src).ToArray());
+                    var outputFileName = GetBundleFileName(partsToBundle.Select(x => $"{(debugModel ? x.DebugSrc : x.Src)}{x.Version}").ToArray());
                     bundle.OutputFileName = _fileProvider.Combine(_webHostEnvironment.WebRootPath, "bundles", outputFileName + ".js");
                     //save
                     var configFilePath = _fileProvider.MapPath($"/{outputFileName}.json");
@@ -382,8 +386,7 @@ namespace Nop.Web.Framework.UI
 
                     //performance optimization. do not bundle and minify for each HTTP request
                     //we periodically re-check already bundles file
-                    //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
-                    var cacheKey = new CacheKey($"Nop.minification.shouldrebuild.js-{outputFileName}")
+                    var cacheKey = new CacheKey($"Nop.minification.shouldrebuild.js-{outputFileName}", "Nop.minification.shouldrebuild.js")
                     {
                         CacheTime = _appSettings.CacheConfig.BundledFilesCacheTime
                     };
@@ -392,6 +395,9 @@ namespace Nop.Web.Framework.UI
 
                     if (shouldRebuild)
                     {
+                        // Remove cache for the old JS bundle
+                        _staticCacheManager.RemoveByPrefixAsync("Nop.minification.shouldrebuild.js");
+
                         lock (_lock)
                         {
                             //store json file to see a generated config file (for debugging purposes)
@@ -498,7 +504,8 @@ namespace Nop.Web.Framework.UI
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
-        public virtual void AddCssFileParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle = false)
+        /// <param name="version">The file version</param>
+        public virtual void AddCssFileParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle = false, string version = null)
         {
             if (!_cssParts.ContainsKey(location))
                 _cssParts.Add(location, new List<CssReferenceMeta>());
@@ -513,7 +520,8 @@ namespace Nop.Web.Framework.UI
             {
                 ExcludeFromBundle = excludeFromBundle,
                 Src = src,
-                DebugSrc = debugSrc
+                DebugSrc = debugSrc,
+                Version = version
             });
         }
         /// <summary>
@@ -523,7 +531,8 @@ namespace Nop.Web.Framework.UI
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
-        public virtual void AppendCssFileParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle = false)
+        /// <param name="version">The file version</param>
+        public virtual void AppendCssFileParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle = false, string version = null)
         {
             if (!_cssParts.ContainsKey(location))
                 _cssParts.Add(location, new List<CssReferenceMeta>());
@@ -538,7 +547,8 @@ namespace Nop.Web.Framework.UI
             {
                 ExcludeFromBundle = excludeFromBundle,
                 Src = src,
-                DebugSrc = debugSrc
+                DebugSrc = debugSrc,
+                Version = version
             });
         }
         /// <summary>
@@ -604,7 +614,7 @@ namespace Nop.Web.Framework.UI
                         bundle.InputFiles.Add(src);
                     }
                     //output file
-                    var outputFileName = GetBundleFileName(partsToBundle.Select(x => { return debugModel ? x.DebugSrc : x.Src; }).ToArray());
+                    var outputFileName = GetBundleFileName(partsToBundle.Select(x => $"{(debugModel ? x.DebugSrc : x.Src)}{x.Version}").ToArray());
                     bundle.OutputFileName = _fileProvider.Combine(_webHostEnvironment.WebRootPath, "bundles", outputFileName + ".css");
                     //save
                     var configFilePath = _fileProvider.MapPath($"/{outputFileName}.json");
@@ -612,8 +622,7 @@ namespace Nop.Web.Framework.UI
 
                     //performance optimization. do not bundle and minify for each HTTP request
                     //we periodically re-check already bundles file
-                    //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
-                    var cacheKey = new CacheKey($"Nop.minification.shouldrebuild.css-{outputFileName}")
+                    var cacheKey = new CacheKey($"Nop.minification.shouldrebuild.css-{outputFileName}", "Nop.minification.shouldrebuild.css")
                     {
                         CacheTime = _appSettings.CacheConfig.BundledFilesCacheTime
                     };
@@ -622,6 +631,9 @@ namespace Nop.Web.Framework.UI
 
                     if (shouldRebuild)
                     {
+                        // Remove cache for the old CSS bundle
+                        _staticCacheManager.RemoveByPrefixAsync("Nop.minification.shouldrebuild.css");
+
                         lock (_lock)
                         {
                             //store json file to see a generated config file (for debugging purposes)
@@ -838,6 +850,11 @@ namespace Nop.Web.Framework.UI
             public string DebugSrc { get; set; }
 
             /// <summary>
+            /// Gets or sets the version
+            /// </summary>
+            public string Version { get; set; }
+
+            /// <summary>
             /// Equals
             /// </summary>
             /// <param name="item">Other item</param>
@@ -846,7 +863,7 @@ namespace Nop.Web.Framework.UI
             {
                 if (item == null)
                     return false;
-                return Src.Equals(item.Src) && DebugSrc.Equals(item.DebugSrc);
+                return Src.Equals(item.Src) && DebugSrc.Equals(item.DebugSrc) && Version?.Equals(item.Version) == true;
             }
             /// <summary>
             /// Get hash code
@@ -876,6 +893,11 @@ namespace Nop.Web.Framework.UI
             public string DebugSrc { get; set; }
 
             /// <summary>
+            /// Gets or sets the version
+            /// </summary>
+            public string Version { get; set; }
+
+            /// <summary>
             /// Equals
             /// </summary>
             /// <param name="item">Other item</param>
@@ -884,7 +906,7 @@ namespace Nop.Web.Framework.UI
             {
                 if (item == null)
                     return false;
-                return Src.Equals(item.Src) && DebugSrc.Equals(item.DebugSrc);
+                return Src.Equals(item.Src) && DebugSrc.Equals(item.DebugSrc) && Version?.Equals(item.Version) == true;
             }
             /// <summary>
             /// Get hash code
