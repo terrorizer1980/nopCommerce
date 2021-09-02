@@ -66,6 +66,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
 
                 //#5532
                 ["Admin.Configuration.Languages.CLDR.Warning"] = "Please make sure the appropriate CLDR package is installed for this culture. You can set CLDR for the specified culture on the <a href=\"{0}\" target=\"_blank\">General Settings page, Localization tab</a>.",
+
+                //#4325
+                ["Admin.Common.Alert.Approve.Info"] = "Please select at least one record to approve.",
+                ["Admin.Common.Alert.Delete.Info"] = "Please select at least one record to delete.",
+                ["Admin.Common.Alert.Disapprove.Info"] = "Please select at least one record to disapprove.",
             }, languageId).Wait();
 
             // rename locales

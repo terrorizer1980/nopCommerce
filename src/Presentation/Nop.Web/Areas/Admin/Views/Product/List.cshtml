@@ -292,7 +292,7 @@
                                         url: "@(Url.Action("DeleteSelected", "Product"))",
                                         data: postData,
                                         error: function (jqXHR, textStatus, errorThrown) {
-                                            $('#deleteSelectedFailed-info').text(errorThrown);
+                                            $('#deleteSelectedFailed-info').text(errorThrown + '. ' + jqXHR.responseJSON.responseText);
                                             $('#deleteSelectedFailed').click();
                                         },
                                         complete: function (jqXHR, textStatus) {

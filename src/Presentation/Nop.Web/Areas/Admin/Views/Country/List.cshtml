@@ -152,7 +152,7 @@
                                         updateTable('#countries-grid');
                                     },
                                     error: function (jqXHR, textStatus, errorThrown) {
-                                        $('#publishSelectedFailed-info').text(errorThrown);
+                                        $('#publishSelectedFailed-info').text(errorThrown + '. ' + jqXHR.responseJSON.responseText);
                                         $("#publishSelectedFailed").click();
                                     }
                                 });
@@ -175,7 +175,7 @@
                                     data: postData,
                                     traditional: true,
                                     error: function (jqXHR, textStatus, errorThrown) {
-                                        $('#unpublishSelectedFailed-info').text(errorThrown);
+                                        $('#unpublishSelectedFailed-info').text(errorThrown + '. ' + jqXHR.responseJSON.responseText);
                                         $("#unpublishSelectedFailed").click();
                                     },
                                     complete: function (jqXHR, textStatus) {

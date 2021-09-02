@@ -205,7 +205,7 @@
                                         data: postData,
                                         traditional: true,
                                         error: function (jqXHR, textStatus, errorThrown) {
-                                            $('#deleteSelectedCommentsFailed-info').text(errorThrown);
+                                            $('#deleteSelectedCommentsFailed-info').text(errorThrown + '. ' + jqXHR.responseJSON.responseText);
                                             $("#deleteSelectedCommentsFailed").click();
                                         },
                                         complete: function (jqXHR, textStatus) {
@@ -232,7 +232,7 @@
                                         data: postData,
                                         traditional: true,
                                         error: function (jqXHR, textStatus, errorThrown) {
-                                            $('#approveSelectedFailed-info').text(errorThrown);
+                                            $('#approveSelectedFailed-info').text(errorThrown + '. ' + jqXHR.responseJSON.responseText);
                                             $("#approveSelectedFailed").click();
                                         },
                                         complete: function (jqXHR, textStatus) {
@@ -258,7 +258,7 @@
                                         data: postData,
                                         traditional: true,
                                         error: function (jqXHR, textStatus, errorThrown) {
-                                            $('#disapproveSelectedFailed-info').text(errorThrown);
+                                            $('#disapproveSelectedFailed-info').text(errorThrown + '. ' + jqXHR.responseJSON.responseText);
                                             $("#disapproveSelectedFailed").click();
                                         },
                                         complete: function (jqXHR, textStatus) {

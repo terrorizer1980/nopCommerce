@@ -125,7 +125,7 @@
                             url: "@(Url.Action("DeleteSelectedSpecificationAttributes", "SpecificationAttribute"))",
                             data: postData,
                             error: function (jqXHR, textStatus, errorThrown) {
-                                $('#delete-selected-specification-attributes-alert-info').text(errorThrown);
+                                $('#delete-selected-specification-attributes-alert-info').text(errorThrown + '. ' + jqXHR.responseJSON.responseText);
                                 $('#delete-selected-specification-attributes-alert').click();
                             },
                             complete: function (jqXHR, textStatus) {
